@@ -1,0 +1,6 @@
+{
+    "batch_size": 100,
+    "epoch": 20,
+    "gpu": 0,
+    "window_size": 5
+}
