@@ -1,9 +1,8 @@
 {
-    "batch_size": 32,
+    "batch_size": 128,
     "epoch": 20,
     "gpu": 0,
     "window_size": 5,
     "embedding_dim": 100,
-    "h_dim": 500,
-    "epoch": 2
+    "h_dim": 500
 }
