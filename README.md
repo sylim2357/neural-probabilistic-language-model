@@ -1,2 +1,2 @@
-# neural-probabilistic-language-model
-Pytorch Implementation of Neural Probabilistic Language Model
+# Pytorch implementation of models for Natural Language Processing
+Pytorch implementation of models for Natural Language Processing
