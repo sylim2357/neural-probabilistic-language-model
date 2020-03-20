@@ -1,13 +1,16 @@
+from utils import pre_process_raw_article, mecab_tokenize
 from torch.utils.data import Dataset
+from nltk import sent_tokenize
 import pandas as pd
+import itertools
 
 class NLPCorpusDataset(Dataset):
     """NLP Corpus dataset.
 
-    Args:
+    config:
         csv_file (str): path to the csv file
         root_dir (str): root
-        args (dict): hyperparameters
+        config (dict): hyperparameters
 
     Attributes:
         root_dir (str): root
@@ -18,7 +21,7 @@ class NLPCorpusDataset(Dataset):
 
     """
 
-    def __init__(self, csv_file, root_dir, args):
+    def __init__(self, csv_file, root_dir, config):
         articles = pd.read_csv(csv_file, encoding='utf-8')['article'].dropna().values
         articles = [pre_process_raw_article(article) for article in articles]
         sentences = itertools.chain.from_iterable([sent_tokenize(article) for article in articles])
@@ -38,9 +41,9 @@ class NLPCorpusDataset(Dataset):
         self.x = []
         self.y = []
         for sentence in corpus:
-            for i in range(len(sentence) - args.window_size):
-                self.x.append(sentence[i:i+args.window_size])
-                self.y.append([sentence[i+args.window_size]])
+            for i in range(len(sentence) - config.window_size):
+                self.x.append(sentence[i:i+config.window_size])
+                self.y.append([sentence[i+config.window_size]])
         del corpus
 
     def __len__(self):

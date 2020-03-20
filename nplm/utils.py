@@ -28,3 +28,7 @@ def pre_process_raw_article(article):
 def mecab_tokenize(sentence):
     t = MeCab.Tagger()
     return [re.split(',', re.sub('\t', ',', s))[0] for s in t.parse(sentence).split('\n') if (s!='') & ('EOS' not in s)]
+
+def collate_fn(data):
+    seqs, labels = zip(*data)
+    return seqs, labels
