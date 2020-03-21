@@ -6,11 +6,16 @@ from utils import collate_fn
 import torch.nn as nn
 import numpy as np
 import argparse
+import easydict
 import pickle
 import torch
+import json
+import sys
+import os
 
 def config_parser(args):
     data_path = args.file
+    print('file path is ' + str(args.file))
     config_path = args.config
     # FILE_PATH = 'D:\\data\\text\\news-articles\\kbanker_articles_subtitles.csv'
     # CONFIG_PATH = 'config.json'
@@ -21,11 +26,12 @@ def config_parser(args):
     return config
 
 def main(config):
-    nlp_dataset = NLPCorpusDataset(csv_file=config.data_path, root_dir='.')
+    print('loading dataset')
+    nlp_dataset = NLPCorpusDataset(csv_file=config.data_path, root_dir='.', config=config)
     dataloader = DataLoader(nlp_dataset, batch_size=config.batch_size, \
                             shuffle=False, num_workers=0, collate_fn=collate_fn)
     model = EmbeddingModule(len(nlp_dataset.word_to_idx),\
-                            config.embedding_dim, config.h_dim).to(config.device)
+                            config.embedding_dim, config.h_dim, config).to(config.device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
     trainer = Trainer(dataset, model, criterion, optimizer, config)
@@ -44,4 +50,4 @@ if __name__ == '__main__':
                       help='indices of GPUs to enable (default: all)')
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     config = config_parser(args.parse_args())
-    main()
+    main(config)
