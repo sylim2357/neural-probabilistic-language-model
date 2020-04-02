@@ -4,7 +4,8 @@ from nltk import sent_tokenize
 import pandas as pd
 import itertools
 
-class NLPCorpusDataset(Dataset):
+
+class NPLMDataset(Dataset):
     """NLP Corpus dataset.
 
     config:

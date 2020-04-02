@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from model.dataset import NLPCorpusDataset
+from model.dataset import NPLMDataset
 from model.model import EmbeddingModule
 from trainer.trainer import Trainer
 from utils import collate_fn
@@ -12,6 +12,7 @@ import torch
 import json
 import sys
 import os
+
 
 def config_parser(args):
     data_path = args.file
@@ -27,7 +28,7 @@ def config_parser(args):
 
 def main(config):
     print('loading dataset')
-    nlp_dataset = NLPCorpusDataset(csv_file=config.data_path, root_dir='.', config=config)
+    nlp_dataset = NPLMDataset(csv_file=config.data_path, root_dir='.', config=config)
     dataloader = DataLoader(nlp_dataset, batch_size=config.batch_size, \
                             shuffle=False, num_workers=0, collate_fn=collate_fn)
     model = EmbeddingModule(len(nlp_dataset.word_to_idx),\
@@ -37,7 +38,7 @@ def main(config):
     trainer = Trainer(dataset, model, criterion, optimizer, config)
     trainer.train()
     model = trainer.model
-    with open('nplm_model.pkl', 'wb') as f:
+    with open('./checkpoints/nplm_model.pkl', 'wb') as f:
         pickle.dump(model, f)
 
 if __name__ == '__main__':

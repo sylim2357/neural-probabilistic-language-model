@@ -1,5 +1,8 @@
-import re
+import easydict
+import torch
 import MeCab
+import json
+import re
 
 
 def pre_process_raw_article(article):
@@ -33,3 +36,13 @@ def mecab_tokenize(sentence):
 def collate_fn(data):
     seqs, labels = zip(*data)
     return seqs, labels
+
+def config_parser(args):
+    print('file path is ' + str(args.file_path))
+    with open(args.config_path, 'rb') as f:
+        config = easydict.EasyDict(json.load(f))
+    config.model = args.model
+    config.file_path = args.file_path
+    config.dataset_path = args.dataset_path
+    config.device = torch.device(args.device)
+    return config
