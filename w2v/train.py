@@ -3,12 +3,12 @@ from torch.utils.data import DataLoader
 # from w2v.model import model
 # from w2v.trainer.trainer import Trainer
 # from w2v.utils import collate_fn
-from model import dataset
 from model import model
 from trainer.trainer import Trainer
 import torch.nn as nn
 import numpy as np
 import argparse
+import dataset
 import pickle
 import torch
 import utils
@@ -20,11 +20,13 @@ def main(config):
     print('loading dataset')
     if config.dataset_path == None:
         if config.model == 'cbow':
-            nlp_dataset = dataset.CBOWDataset(config)
+            nlp_dataset = dataset.cbow_dataset.CBOWDataset(config)
         elif config.model == 'skip-gram':
-            nlp_dataset = dataset.SkipGramDataset(config)
+            nlp_dataset = dataset.skipgram_dataset.SkipGramDataset(config)
         elif config.model == 'neg-sampling':
-            nlp_dataset = dataset.NegSamplingDataset(config)
+            nlp_dataset = dataset.negsampling_dataset.NegSamplingDataset(config)
+        elif config.model == 'fast-text':
+            nlp_dataset = dataset.fasttext_dataset.FastTextDataset(config)
         else:
             raise AssertionError('dataset should be one of w2v models.')
     else:
@@ -52,7 +54,7 @@ if __name__ == '__main__':
                       help='which model to use')
     args.add_argument('-cp', '--config-path', default='config.json', type=str,
                       help='config file path (default: None)')
-    args.add_argument('-fp', '--file-path', default='D:\\data\\text\\news-articles\\kbanker_articles_processed.pkl', type=str,
+    args.add_argument('-fp', '--file-path', default='D:\\data\\text\\torch-dataset\\kbanker_articles_processed.pkl', type=str,
                       help='path to latest checkpoint (default: None)')
     args.add_argument('-dp', '--dataset-path', default=None, type=str,
                       help='if there is a pickled dataset')
