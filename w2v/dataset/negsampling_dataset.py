@@ -1,6 +1,8 @@
 from dataset.w2v_dataset import W2VDataset
 import collections
+import numpy as np
 import itertools
+import torch
 
 
 class NegSamplingDataset(W2VDataset):
