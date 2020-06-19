@@ -1,8 +1,4 @@
 from torch.utils.data import DataLoader
-# from w2v.model import dataset
-# from w2v.model import model
-# from w2v.trainer.trainer import Trainer
-# from w2v.utils import collate_fn
 from model import model
 from trainer.trainer import Trainer
 import torch.nn as nn

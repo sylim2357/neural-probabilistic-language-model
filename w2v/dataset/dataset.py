@@ -1,4 +1,3 @@
-# from w2v.utils import pre_process_raw_article, mecab_tokenize
 from utils import pre_process_raw_article, mecab_tokenize
 from torch.utils.data import Dataset
 from nltk import sent_tokenize

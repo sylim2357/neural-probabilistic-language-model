@@ -46,3 +46,14 @@ def config_parser(args):
     config.dataset_path = args.dataset_path
     config.device = torch.device(args.device)
     return config
+
+def ngram(self, w, n):
+    word = '<' + w + '>'
+    if len(word) <= 3:
+        return [word]
+    else:
+        ngram = []
+        for i in range(n, len(word)+1):
+            ngram += [word[i-n:i]]
+
+        return ngram + [word]
