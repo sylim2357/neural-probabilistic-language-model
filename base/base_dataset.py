@@ -5,8 +5,8 @@ from nltk import sent_tokenize
 import pandas as pd
 import itertools
 
-class BaseDataset(Dataset):
 
+class BaseDataset(Dataset):
     def __init__(self, csv_file, root_dir, config):
         super(BaseDataset, self).__init__()
         corpus = self.pre_process()

@@ -4,7 +4,7 @@ import numpy as np
 import pickle
 
 
-class Trainer():
+class Trainer:
     def __init__(self, dataloader, model, criterion, optimizer, config):
         self.dataloader = dataloader
         self.model = model
@@ -29,6 +29,13 @@ class Trainer():
                 if i % 100 == 99:
                     print(i, loss.item())
                     if i % 100000 == 99:
-                        with open('../checkpoints/checkpoint_' + str(i) + '.pkl', 'wb') as f:
+                        with open(
+                            '../checkpoints/checkpoint_' + str(i) + '.pkl',
+                            'wb',
+                        ) as f:
                             pickle.dump(self.model, f)
-                        print('../checkpoints/checkpoint_' + str(i) + '.pkl saved')
+                        print(
+                            '../checkpoints/checkpoint_'
+                            + str(i)
+                            + '.pkl saved'
+                        )

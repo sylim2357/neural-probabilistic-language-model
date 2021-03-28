@@ -11,8 +11,13 @@ class CBOWDataset(W2VDataset):
         print('constructing training dataset')
         x, y = [], []
         for sentence in corpus:
-            for i in range(config.window_size, len(sentence) - config.window_size):
-                x += [sentence[i-config.window_size:i] + sentence[i+1:i+config.window_size+1]]
+            for i in range(
+                config.window_size, len(sentence) - config.window_size
+            ):
+                x += [
+                    sentence[i - config.window_size : i]
+                    + sentence[i + 1 : i + config.window_size + 1]
+                ]
                 y += [sentence[i]]
 
         return x, y

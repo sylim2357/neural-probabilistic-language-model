@@ -1,6 +1,6 @@
 from torch.utils.data import DataLoader
 from model import model
-from trainer.trainer import Trainer
+from trainer.trainer import Trainer, NegSamplingTrainer
 import torch.nn as nn
 import numpy as np
 import argparse
@@ -20,7 +20,9 @@ def main(config):
         elif config.model == 'skip-gram':
             nlp_dataset = dataset.skipgram_dataset.SkipGramDataset(config)
         elif config.model == 'neg-sampling':
-            nlp_dataset = dataset.negsampling_dataset.NegSamplingDataset(config)
+            nlp_dataset = dataset.negsampling_dataset.NegSamplingDataset(
+                config
+            )
         elif config.model == 'fast-text':
             nlp_dataset = dataset.fasttext_dataset.FastTextDataset(config)
         else:
@@ -28,8 +30,13 @@ def main(config):
     else:
         with open(config.dataset_path, 'rb') as f:
             nlp_dataset = pickle.load(f)
-    dataloader = DataLoader(nlp_dataset, batch_size=config.batch_size, \
-                            shuffle=False, num_workers=0, collate_fn=collate_fn)
+    dataloader = DataLoader(
+        nlp_dataset,
+        batch_size=config.batch_size,
+        shuffle=False,
+        num_workers=0,
+        collate_fn=collate_fn,
+    )
     print('dataloader made')
     if config.model == 'neg-sampling':
         trainer = NegSamplingTrainer(dataloader, config)
@@ -41,21 +48,49 @@ def main(config):
     print('start training')
     trainer.train()
     model = trainer.model
-    with open('./checkpoints/w2v'+config.model+'_model.pkl', 'wb') as f:
+    with open('./checkpoints/w2v' + config.model + '_model.pkl', 'wb') as f:
         pickle.dump(model, f)
+
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser(description='nlp embedding')
-    args.add_argument('-m', '--model', default='neg-sampling', type=str,
-                      help='which model to use')
-    args.add_argument('-cp', '--config-path', default='config.json', type=str,
-                      help='config file path (default: None)')
-    args.add_argument('-fp', '--file-path', default='D:\\data\\text\\torch-dataset\\kbanker_articles_processed.pkl', type=str,
-                      help='path to latest checkpoint (default: None)')
-    args.add_argument('-dp', '--dataset-path', default=None, type=str,
-                      help='if there is a pickled dataset')
-    args.add_argument('-d', '--device', default='cuda:0', type=str,
-                      help='indices of GPUs to enable (default: all)')
-    sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+    args.add_argument(
+        '-m',
+        '--model',
+        default='neg-sampling',
+        type=str,
+        help='which model to use',
+    )
+    args.add_argument(
+        '-cp',
+        '--config-path',
+        default='config.json',
+        type=str,
+        help='config file path (default: None)',
+    )
+    args.add_argument(
+        '-fp',
+        '--file-path',
+        default='\\',
+        type=str,
+        help='path to latest checkpoint (default: None)',
+    )
+    args.add_argument(
+        '-dp',
+        '--dataset-path',
+        default=None,
+        type=str,
+        help='if there is a pickled dataset',
+    )
+    args.add_argument(
+        '-d',
+        '--device',
+        default='cuda:0',
+        type=str,
+        help='indices of GPUs to enable (default: all)',
+    )
+    sys.path.append(
+        os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+    )
     config = utils.config_parser(args.parse_args())
     main(config)

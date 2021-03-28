@@ -18,7 +18,7 @@ def pre_process_raw_article(article):
         ('\([^)]*\)', ''),
         ('[^가-힣\'"A-Za-z0-9.\s\?\!]', ' '),
         ('(?=[^0-9])\.(?=[^0-9])', '. '),
-        ('\s\s+', ' ')
+        ('\s\s+', ' '),
     ]
 
     for old, new in replacements:
@@ -26,9 +26,15 @@ def pre_process_raw_article(article):
 
     return article
 
+
 def mecab_tokenize(sentence):
     t = MeCab.Tagger()
-    return [re.split(',', re.sub('\t', ',', s))[0] for s in t.parse(sentence).split('\n') if (s!='') & ('EOS' not in s)]
+    return [
+        re.split(',', re.sub('\t', ',', s))[0]
+        for s in t.parse(sentence).split('\n')
+        if (s != '') & ('EOS' not in s)
+    ]
+
 
 def collate_fn(data):
     seqs, labels = zip(*data)
